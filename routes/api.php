@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\API\AuthController;
+use App\Http\Controllers\API\IncomeSourceController;
 
 /*
 |--------------------------------------------------------------------------
@@ -31,6 +32,12 @@ Route::middleware('auth:sanctum')->prefix('v1')->group(function () {
     Route::get('/user', function (Request $request) {
         return $request->user();
     });
+
+    Route::middleware('auth:sanctum')->group(function () {
+        Route::get('/income-sources', [IncomeSourceController::class, 'index']);
+        Route::post('/income-sources', [IncomeSourceController::class, 'store']);
+    });
+
 
     // Logout
     Route::post('/logout', function (Request $request) {
