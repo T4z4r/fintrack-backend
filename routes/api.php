@@ -36,6 +36,9 @@ Route::middleware('auth:sanctum')->prefix('v1')->group(function () {
     Route::middleware('auth:sanctum')->group(function () {
         Route::get('/income-sources', [IncomeSourceController::class, 'index']);
         Route::post('/income-sources', [IncomeSourceController::class, 'store']);
+        Route::get('/income-sources/{id}', [IncomeSourceController::class, 'show']);
+        Route::put('/income-sources/{id}', [IncomeSourceController::class, 'update']);
+        Route::delete('/income-sources/{id}', [IncomeSourceController::class, 'destroy']);
     });
 
 

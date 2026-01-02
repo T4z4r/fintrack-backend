@@ -45,4 +45,12 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    /**
+     * Get the income sources for the user.
+     */
+    public function incomeSources()
+    {
+        return $this->hasMany(IncomeSource::class);
+    }
 }
