@@ -6,6 +6,7 @@ use App\Http\Controllers\API\AuthController;
 use App\Http\Controllers\API\IncomeSourceController;
 use App\Http\Controllers\API\IncomeController;
 use App\Http\Controllers\API\ExpenseController;
+use App\Http\Controllers\API\BudgetController;
 
 /*
 |--------------------------------------------------------------------------
@@ -53,6 +54,12 @@ Route::middleware('auth:sanctum')->prefix('v1')->group(function () {
         Route::get('/expenses/{id}', [ExpenseController::class, 'show']);
         Route::put('/expenses/{id}', [ExpenseController::class, 'update']);
         Route::delete('/expenses/{id}', [ExpenseController::class, 'destroy']);
+
+        Route::get('/budgets', [BudgetController::class, 'index']);
+        Route::post('/budgets', [BudgetController::class, 'store']);
+        Route::get('/budgets/{id}', [BudgetController::class, 'show']);
+        Route::put('/budgets/{id}', [BudgetController::class, 'update']);
+        Route::delete('/budgets/{id}', [BudgetController::class, 'destroy']);
     });
 
 
