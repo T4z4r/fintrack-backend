@@ -93,4 +93,12 @@ class User extends Authenticatable
     {
         return $this->hasMany(Debt::class);
     }
+
+    /**
+     * Get the assets for the user.
+     */
+    public function assets()
+    {
+        return $this->hasMany(Asset::class);
+    }
 }

@@ -9,6 +9,8 @@ use App\Http\Controllers\API\ExpenseController;
 use App\Http\Controllers\API\BudgetController;
 use App\Http\Controllers\API\InvestmentController;
 use App\Http\Controllers\API\DebtController;
+use App\Http\Controllers\API\AssetController;
+use App\Http\Controllers\API\DashboardController;
 
 /*
 |--------------------------------------------------------------------------
@@ -37,6 +39,9 @@ Route::middleware('auth:sanctum')->prefix('v1')->group(function () {
     Route::get('/user', function (Request $request) {
         return $request->user();
     });
+
+    // Dashboard
+    Route::get('/dashboard', [DashboardController::class, 'index']);
 
     Route::middleware('auth:sanctum')->group(function () {
         Route::get('/income-sources', [IncomeSourceController::class, 'index']);
@@ -68,12 +73,18 @@ Route::middleware('auth:sanctum')->prefix('v1')->group(function () {
         Route::get('/investments/{id}', [InvestmentController::class, 'show']);
         Route::put('/investments/{id}', [InvestmentController::class, 'update']);
         Route::delete('/investments/{id}', [InvestmentController::class, 'destroy']);
-        
+
         Route::get('/debts', [DebtController::class, 'index']);
         Route::post('/debts', [DebtController::class, 'store']);
         Route::get('/debts/{id}', [DebtController::class, 'show']);
         Route::put('/debts/{id}', [DebtController::class, 'update']);
         Route::delete('/debts/{id}', [DebtController::class, 'destroy']);
+        
+        Route::get('/assets', [AssetController::class, 'index']);
+        Route::post('/assets', [AssetController::class, 'store']);
+        Route::get('/assets/{id}', [AssetController::class, 'show']);
+        Route::put('/assets/{id}', [AssetController::class, 'update']);
+        Route::delete('/assets/{id}', [AssetController::class, 'destroy']);
     });
 
 
