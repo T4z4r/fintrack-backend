@@ -20,7 +20,9 @@ class BudgetController extends Controller
             return response()->json([
                 'success' => true,
                 'message' => 'Budgets retrieved successfully',
-                'data' => $budgets
+                'data' => $budgets->map(function ($budget) {
+                    return $budget->loadCalculatedAttributes();
+                })
             ], 200);
         } catch (\Exception $e) {
             return response()->json([
@@ -38,20 +40,33 @@ class BudgetController extends Controller
     {
         try {
             $data = $request->validate([
-                'category' => 'required|string|max:255',
-                'monthly_limit' => 'required|numeric|min:0',
-                'month' => 'required|integer|min:1|max:12',
-                'year' => 'required|integer|min:2000|max:' . (date('Y') + 10)
+                'name' => 'required|string|max:255',
+                'planned_amount' => 'required|numeric|min:0',
+                'time_period' => 'required|string|in:daily,weekly,monthly,yearly',
+                'category_type' => 'required|string|in:income,investment,expense,asset,debt',
+                'description' => 'nullable|string|max:1000',
+                // Backward compatibility fields
+                'category' => 'nullable|string|max:255',
+                'monthly_limit' => 'nullable|numeric|min:0',
+                'month' => 'nullable|integer|min:1|max:12',
+                'year' => 'nullable|integer|min:2000|max:' . (date('Y') + 10)
             ]);
 
             $data['user_id'] = Auth::id();
+            $data['status'] = 'active';
+            $data['spent_amount'] = 0;
+
+            // For backward compatibility, set monthly_limit if not provided
+            if (empty($data['monthly_limit']) && !empty($data['planned_amount'])) {
+                $data['monthly_limit'] = $data['planned_amount'];
+            }
 
             $budget = Budget::create($data);
 
             return response()->json([
                 'success' => true,
                 'message' => 'Budget created successfully',
-                'data' => $budget
+                'data' => $budget->loadCalculatedAttributes()
             ], 201);
         } catch (\Illuminate\Validation\ValidationException $e) {
             return response()->json([
@@ -88,7 +103,7 @@ class BudgetController extends Controller
             return response()->json([
                 'success' => true,
                 'message' => 'Budget retrieved successfully',
-                'data' => $budget
+                'data' => $budget->loadCalculatedAttributes()
             ], 200);
         } catch (\Exception $e) {
             return response()->json([
@@ -117,10 +132,18 @@ class BudgetController extends Controller
             }
 
             $data = $request->validate([
-                'category' => 'sometimes|required|string|max:255',
-                'monthly_limit' => 'sometimes|required|numeric|min:0',
-                'month' => 'sometimes|required|integer|min:1|max:12',
-                'year' => 'sometimes|required|integer|min:2000|max:' . (date('Y') + 10)
+                'name' => 'sometimes|required|string|max:255',
+                'planned_amount' => 'sometimes|required|numeric|min:0',
+                'spent_amount' => 'sometimes|required|numeric|min:0',
+                'time_period' => 'sometimes|required|string|in:daily,weekly,monthly,yearly',
+                'category_type' => 'sometimes|required|string|in:income,investment,expense,asset,debt',
+                'status' => 'sometimes|required|string|in:active,completed,cancelled',
+                'description' => 'nullable|string|max:1000',
+                // Backward compatibility fields
+                'category' => 'nullable|string|max:255',
+                'monthly_limit' => 'nullable|numeric|min:0',
+                'month' => 'nullable|integer|min:1|max:12',
+                'year' => 'nullable|integer|min:2000|max:' . (date('Y') + 10)
             ]);
 
             $budget->update($data);
@@ -128,7 +151,7 @@ class BudgetController extends Controller
             return response()->json([
                 'success' => true,
                 'message' => 'Budget updated successfully',
-                'data' => $budget->fresh()
+                'data' => $budget->fresh()->loadCalculatedAttributes()
             ], 200);
         } catch (\Illuminate\Validation\ValidationException $e) {
             return response()->json([
