@@ -7,6 +7,7 @@ use App\Http\Controllers\API\IncomeSourceController;
 use App\Http\Controllers\API\IncomeController;
 use App\Http\Controllers\API\ExpenseController;
 use App\Http\Controllers\API\BudgetController;
+use App\Http\Controllers\API\InvestmentController;
 
 /*
 |--------------------------------------------------------------------------
@@ -60,6 +61,12 @@ Route::middleware('auth:sanctum')->prefix('v1')->group(function () {
         Route::get('/budgets/{id}', [BudgetController::class, 'show']);
         Route::put('/budgets/{id}', [BudgetController::class, 'update']);
         Route::delete('/budgets/{id}', [BudgetController::class, 'destroy']);
+
+        Route::get('/investments', [InvestmentController::class, 'index']);
+        Route::post('/investments', [InvestmentController::class, 'store']);
+        Route::get('/investments/{id}', [InvestmentController::class, 'show']);
+        Route::put('/investments/{id}', [InvestmentController::class, 'update']);
+        Route::delete('/investments/{id}', [InvestmentController::class, 'destroy']);
     });
 
 

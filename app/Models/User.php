@@ -77,4 +77,12 @@ class User extends Authenticatable
     {
         return $this->hasMany(Budget::class);
     }
+
+    /**
+     * Get the investments for the user.
+     */
+    public function investments()
+    {
+        return $this->hasMany(Investment::class);
+    }
 }
