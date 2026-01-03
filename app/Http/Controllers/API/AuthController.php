@@ -14,7 +14,8 @@ class AuthController extends Controller
         $data = $request->validate([
             'name' => 'required',
             'email' => 'required|email|unique:users',
-            'password' => 'required|min:6'
+            'password' => 'required|min:8|confirmed',
+            'password_confirmation' => 'required'
         ]);
 
         $user = User::create([
@@ -26,8 +27,18 @@ class AuthController extends Controller
         $token = $user->createToken('fintrack')->plainTextToken;
 
         return response()->json([
-            'token' => $token
-        ]);
+            'success' => true,
+            'message' => 'User registered successfully',
+            'data' => [
+                'user' => [
+                    'id' => $user->id,
+                    'name' => $user->name,
+                    'email' => $user->email,
+                    'created_at' => $user->created_at,
+                ],
+                'token' => $token
+            ]
+        ], 201);
     }
 
     public function login(Request $request)
@@ -40,11 +51,23 @@ class AuthController extends Controller
         $user = User::where('email', $validated['email'])->first();
 
         if (! $user || ! Hash::check($validated['password'], $user->password)) {
-            return response()->json(['message' => 'Invalid credentials'], 401);
+            return response()->json([
+                'success' => false,
+                'message' => 'Invalid credentials'
+            ], 401);
         }
 
         return response()->json([
-            'token' => $user->createToken('fintrack')->plainTextToken
+            'success' => true,
+            'message' => 'Login successful',
+            'data' => [
+                'user' => [
+                    'id' => $user->id,
+                    'name' => $user->name,
+                    'email' => $user->email,
+                ],
+                'token' => $user->createToken('fintrack')->plainTextToken
+            ]
         ]);
     }
 }
