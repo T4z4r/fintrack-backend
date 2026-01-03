@@ -8,6 +8,7 @@ use App\Http\Controllers\API\IncomeController;
 use App\Http\Controllers\API\ExpenseController;
 use App\Http\Controllers\API\BudgetController;
 use App\Http\Controllers\API\InvestmentController;
+use App\Http\Controllers\API\DebtController;
 
 /*
 |--------------------------------------------------------------------------
@@ -67,6 +68,12 @@ Route::middleware('auth:sanctum')->prefix('v1')->group(function () {
         Route::get('/investments/{id}', [InvestmentController::class, 'show']);
         Route::put('/investments/{id}', [InvestmentController::class, 'update']);
         Route::delete('/investments/{id}', [InvestmentController::class, 'destroy']);
+        
+        Route::get('/debts', [DebtController::class, 'index']);
+        Route::post('/debts', [DebtController::class, 'store']);
+        Route::get('/debts/{id}', [DebtController::class, 'show']);
+        Route::put('/debts/{id}', [DebtController::class, 'update']);
+        Route::delete('/debts/{id}', [DebtController::class, 'destroy']);
     });
 
 
