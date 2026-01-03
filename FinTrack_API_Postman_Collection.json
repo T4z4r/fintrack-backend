@@ -1,0 +1,1095 @@
+{
+  "info": {
+    "name": "FinTrack API Collection",
+    "description": "Complete API collection for FinTrack - Personal Finance Management System",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "version": "1.0.0"
+  },
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{auth_token}}",
+        "type": "string"
+      }
+    ]
+  },
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:8000/api/v1",
+      "type": "string"
+    },
+    {
+      "key": "auth_token",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "user_id",
+      "value": "",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "Authentication",
+      "item": [
+        {
+          "name": "Register User",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"John Doe\",\n  \"email\": \"john@example.com\",\n  \"password\": \"password123\",\n  \"password_confirmation\": \"password123\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/register",
+              "host": ["{{base_url}}"],
+              "path": ["register"]
+            },
+            "description": "Register a new user account"
+          },
+          "response": []
+        },
+        {
+          "name": "Login User",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "    const response = pm.response.json();",
+                  "    pm.collectionVariables.set('auth_token', response.data.token);",
+                  "    pm.collectionVariables.set('user_id', response.data.user.id);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"john@example.com\",\n  \"password\": \"password123\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/login",
+              "host": ["{{base_url}}"],
+              "path": ["login"]
+            },
+            "description": "Authenticate user and get access token"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Current User",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/user",
+              "host": ["{{base_url}}"],
+              "path": ["user"]
+            },
+            "description": "Get authenticated user information"
+          },
+          "response": []
+        },
+        {
+          "name": "Logout User",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/logout",
+              "host": ["{{base_url}}"],
+              "path": ["logout"]
+            },
+            "description": "Logout and invalidate access token"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Dashboard",
+      "item": [
+        {
+          "name": "Get Dashboard Overview",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/dashboard",
+              "host": ["{{base_url}}"],
+              "path": ["dashboard"]
+            },
+            "description": "Get comprehensive financial overview and statistics"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Income Management",
+      "item": [
+        {
+          "name": "Income Sources",
+          "item": [
+            {
+              "name": "List Income Sources",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/income-sources",
+                  "host": ["{{base_url}}"],
+                  "path": ["income-sources"]
+                },
+                "description": "Get all income sources for authenticated user"
+              },
+              "response": []
+            },
+            {
+              "name": "Create Income Source",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"Primary Job\",\n  \"description\": \"Main employment income source\"\n}"
+                },
+                "url": {
+                  "raw": "{{base_url}}/income-sources",
+                  "host": ["{{base_url}}"],
+                  "path": ["income-sources"]
+                },
+                "description": "Create a new income source"
+              },
+              "response": []
+            },
+            {
+              "name": "Get Income Source",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/income-sources/1",
+                  "host": ["{{base_url}}"],
+                  "path": ["income-sources", "1"]
+                },
+                "description": "Get specific income source by ID"
+              },
+              "response": []
+            },
+            {
+              "name": "Update Income Source",
+              "request": {
+                "method": "PUT",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"Updated Job Title\",\n  \"description\": \"Updated description\"\n}"
+                },
+                "url": {
+                  "raw": "{{base_url}}/income-sources/1",
+                  "host": ["{{base_url}}"],
+                  "path": ["income-sources", "1"]
+                },
+                "description": "Update an existing income source"
+              },
+              "response": []
+            },
+            {
+              "name": "Delete Income Source",
+              "request": {
+                "method": "DELETE",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/income-sources/1",
+                  "host": ["{{base_url}}"],
+                  "path": ["income-sources", "1"]
+                },
+                "description": "Delete an income source"
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "Incomes",
+          "item": [
+            {
+              "name": "List Incomes",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/incomes",
+                  "host": ["{{base_url}}"],
+                  "path": ["incomes"]
+                },
+                "description": "Get all incomes for authenticated user"
+              },
+              "response": []
+            },
+            {
+              "name": "Create Income",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"income_source_id\": 1,\n  \"amount\": 3000.00,\n  \"date\": \"2024-01-15\",\n  \"description\": \"January salary payment\"\n}"
+                },
+                "url": {
+                  "raw": "{{base_url}}/incomes",
+                  "host": ["{{base_url}}"],
+                  "path": ["incomes"]
+                },
+                "description": "Create a new income record"
+              },
+              "response": []
+            },
+            {
+              "name": "Get Income",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/incomes/1",
+                  "host": ["{{base_url}}"],
+                  "path": ["incomes", "1"]
+                },
+                "description": "Get specific income by ID"
+              },
+              "response": []
+            },
+            {
+              "name": "Update Income",
+              "request": {
+                "method": "PUT",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"amount\": 3200.00,\n  \"description\": \"Updated salary with bonus\"\n}"
+                },
+                "url": {
+                  "raw": "{{base_url}}/incomes/1",
+                  "host": ["{{base_url}}"],
+                  "path": ["incomes", "1"]
+                },
+                "description": "Update an existing income record"
+              },
+              "response": []
+            },
+            {
+              "name": "Delete Income",
+              "request": {
+                "method": "DELETE",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/incomes/1",
+                  "host": ["{{base_url}}"],
+                  "path": ["incomes", "1"]
+                },
+                "description": "Delete an income record"
+              },
+              "response": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Expense Management",
+      "item": [
+        {
+          "name": "List Expenses",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/expenses",
+              "host": ["{{base_url}}"],
+              "path": ["expenses"]
+            },
+            "description": "Get all expenses for authenticated user"
+          },
+          "response": []
+        },
+        {
+          "name": "Create Expense",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"amount\": 150.00,\n  \"category\": \"groceries\",\n  \"date\": \"2024-01-10\",\n  \"description\": \"Weekly grocery shopping\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/expenses",
+              "host": ["{{base_url}}"],
+              "path": ["expenses"]
+            },
+            "description": "Create a new expense record"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Expense",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/expenses/1",
+              "host": ["{{base_url}}"],
+              "path": ["expenses", "1"]
+            },
+            "description": "Get specific expense by ID"
+          },
+          "response": []
+        },
+        {
+          "name": "Update Expense",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"amount\": 175.00,\n  \"description\": \"Updated grocery expense\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/expenses/1",
+              "host": ["{{base_url}}"],
+              "path": ["expenses", "1"]
+            },
+            "description": "Update an existing expense"
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Expense",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/expenses/1",
+              "host": ["{{base_url}}"],
+              "path": ["expenses", "1"]
+            },
+            "description": "Delete an expense record"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Budget Management",
+      "item": [
+        {
+          "name": "Budgets",
+          "item": [
+            {
+              "name": "List Budgets",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/budgets",
+                  "host": ["{{base_url}}"],
+                  "path": ["budgets"]
+                },
+                "description": "Get all budgets for authenticated user"
+              },
+              "response": []
+            },
+            {
+              "name": "Create Budget",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"Monthly Budget - January 2024\",\n  \"time_period\": \"monthly\",\n  \"category_type\": \"expense\",\n  \"description\": \"January household expenses budget\"\n}"
+                },
+                "url": {
+                  "raw": "{{base_url}}/budgets",
+                  "host": ["{{base_url}}"],
+                  "path": ["budgets"]
+                },
+                "description": "Create a new budget container"
+              },
+              "response": []
+            },
+            {
+              "name": "Get Budget with Items",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/budgets/1",
+                  "host": ["{{base_url}}"],
+                  "path": ["budgets", "1"]
+                },
+                "description": "Get specific budget with all its items"
+              },
+              "response": []
+            },
+            {
+              "name": "Update Budget",
+              "request": {
+                "method": "PUT",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"Updated Budget Name\",\n  \"description\": \"Updated description\"\n}"
+                },
+                "url": {
+                  "raw": "{{base_url}}/budgets/1",
+                  "host": ["{{base_url}}"],
+                  "path": ["budgets", "1"]
+                },
+                "description": "Update an existing budget"
+              },
+              "response": []
+            },
+            {
+              "name": "Delete Budget",
+              "request": {
+                "method": "DELETE",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/budgets/1",
+                  "host": ["{{base_url}}"],
+                  "path": ["budgets", "1"]
+                },
+                "description": "Delete a budget and all its items"
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "Budget Items",
+          "item": [
+            {
+              "name": "List All Budget Items",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/budget-items",
+                  "host": ["{{base_url}}"],
+                  "path": ["budget-items"]
+                },
+                "description": "Get all budget items for authenticated user"
+              },
+              "response": []
+            },
+            {
+              "name": "Get Budget Items for Budget",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/budgets/1/items",
+                  "host": ["{{base_url}}"],
+                  "path": ["budgets", "1", "items"]
+                },
+                "description": "Get all budget items for a specific budget"
+              },
+              "response": []
+            },
+            {
+              "name": "Create Budget Item",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"budget_id\": 1,\n  \"name\": \"Groceries\",\n  \"planned_amount\": 500.00,\n  \"category_type\": \"expense\",\n  \"category\": \"groceries\",\n  \"description\": \"Weekly grocery shopping budget\"\n}"
+                },
+                "url": {
+                  "raw": "{{base_url}}/budget-items",
+                  "host": ["{{base_url}}"],
+                  "path": ["budget-items"]
+                },
+                "description": "Create a new budget item within a budget"
+              },
+              "response": []
+            },
+            {
+              "name": "Get Budget Item",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/budget-items/1",
+                  "host": ["{{base_url}}"],
+                  "path": ["budget-items", "1"]
+                },
+                "description": "Get specific budget item by ID"
+              },
+              "response": []
+            },
+            {
+              "name": "Update Budget Item",
+              "request": {
+                "method": "PUT",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"planned_amount\": 600.00,\n  \"description\": \"Updated grocery budget\"\n}"
+                },
+                "url": {
+                  "raw": "{{base_url}}/budget-items/1",
+                  "host": ["{{base_url}}"],
+                  "path": ["budget-items", "1"]
+                },
+                "description": "Update an existing budget item"
+              },
+              "response": []
+            },
+            {
+              "name": "Update Spent Amount (Quick)",
+              "request": {
+                "method": "PATCH",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"spent_amount\": 125.00\n}"
+                },
+                "url": {
+                  "raw": "{{base_url}}/budget-items/1/spent-amount",
+                  "host": ["{{base_url}}"],
+                  "path": ["budget-items", "1", "spent-amount"]
+                },
+                "description": "Quick update of spent amount for a budget item"
+              },
+              "response": []
+            },
+            {
+              "name": "Delete Budget Item",
+              "request": {
+                "method": "DELETE",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/budget-items/1",
+                  "host": ["{{base_url}}"],
+                  "path": ["budget-items", "1"]
+                },
+                "description": "Delete a budget item"
+              },
+              "response": []
+            },
+            {
+              "name": "Get Budget Items Summary",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/budget-items-summary",
+                  "host": ["{{base_url}}"],
+                  "path": ["budget-items-summary"]
+                },
+                "description": "Get budget items summary grouped by category"
+              },
+              "response": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Investment Management",
+      "item": [
+        {
+          "name": "List Investments",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/investments",
+              "host": ["{{base_url}}"],
+              "path": ["investments"]
+            },
+            "description": "Get all investments for authenticated user"
+          },
+          "response": []
+        },
+        {
+          "name": "Create Investment",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Tech Stock Portfolio\",\n  \"type\": \"stocks\",\n  \"amount_invested\": 10000.00,\n  \"current_value\": 12500.00,\n  \"date_invested\": \"2024-01-01\",\n  \"description\": \"Technology sector investments\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/investments",
+              "host": ["{{base_url}}"],
+              "path": ["investments"]
+            },
+            "description": "Create a new investment record"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Investment",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/investments/1",
+              "host": ["{{base_url}}"],
+              "path": ["investments", "1"]
+            },
+            "description": "Get specific investment by ID"
+          },
+          "response": []
+        },
+        {
+          "name": "Update Investment",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"current_value\": 13000.00,\n  \"description\": \"Updated investment value\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/investments/1",
+              "host": ["{{base_url}}"],
+              "path": ["investments", "1"]
+            },
+            "description": "Update an existing investment"
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Investment",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/investments/1",
+              "host": ["{{base_url}}"],
+              "path": ["investments", "1"]
+            },
+            "description": "Delete an investment record"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Debt Management",
+      "item": [
+        {
+          "name": "Debts",
+          "item": [
+            {
+              "name": "List Debts",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/debts",
+                  "host": ["{{base_url}}"],
+                  "path": ["debts"]
+                },
+                "description": "Get all debts for authenticated user"
+              },
+              "response": []
+            },
+            {
+              "name": "Create Debt",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"Car Loan\",\n  \"amount\": 15000.00,\n  \"due_date\": \"2025-12-31\",\n  \"status\": \"partial\"\n}"
+                },
+                "url": {
+                  "raw": "{{base_url}}/debts",
+                  "host": ["{{base_url}}"],
+                  "path": ["debts"]
+                },
+                "description": "Create a new debt record"
+              },
+              "response": []
+            },
+            {
+              "name": "Get Debt",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/debts/1",
+                  "host": ["{{base_url}}"],
+                  "path": ["debts", "1"]
+                },
+                "description": "Get specific debt by ID"
+              },
+              "response": []
+            },
+            {
+              "name": "Update Debt",
+              "request": {
+                "method": "PUT",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"status\": \"paid\",\n  \"due_date\": \"2025-06-30\"\n}"
+                },
+                "url": {
+                  "raw": "{{base_url}}/debts/1",
+                  "host": ["{{base_url}}"],
+                  "path": ["debts", "1"]
+                },
+                "description": "Update an existing debt"
+              },
+              "response": []
+            },
+            {
+              "name": "Delete Debt",
+              "request": {
+                "method": "DELETE",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/debts/1",
+                  "host": ["{{base_url}}"],
+                  "path": ["debts", "1"]
+                },
+                "description": "Delete a debt record"
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "Debt Payments",
+          "item": [
+            {
+              "name": "List All Debt Payments",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/debt-payments",
+                  "host": ["{{base_url}}"],
+                  "path": ["debt-payments"]
+                },
+                "description": "Get all debt payments for authenticated user"
+              },
+              "response": []
+            },
+            {
+              "name": "Get Debt Payments for Debt",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/debts/1/payments",
+                  "host": ["{{base_url}}"],
+                  "path": ["debts", "1", "payments"]
+                },
+                "description": "Get all payments for a specific debt"
+              },
+              "response": []
+            },
+            {
+              "name": "Create Debt Payment",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"debt_id\": 1,\n  \"amount\": 500.00,\n  \"payment_date\": \"2024-01-15\",\n  \"payment_method\": \"bank_transfer\",\n  \"notes\": \"Monthly payment\"\n}"
+                },
+                "url": {
+                  "raw": "{{base_url}}/debt-payments",
+                  "host": ["{{base_url}}"],
+                  "path": ["debt-payments"]
+                },
+                "description": "Create a new debt payment record"
+              },
+              "response": []
+            },
+            {
+              "name": "Get Debt Payment",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/debt-payments/1",
+                  "host": ["{{base_url}}"],
+                  "path": ["debt-payments", "1"]
+                },
+                "description": "Get specific debt payment by ID"
+              },
+              "response": []
+            },
+            {
+              "name": "Update Debt Payment",
+              "request": {
+                "method": "PUT",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"amount\": 550.00,\n  \"notes\": \"Updated payment amount\"\n}"
+                },
+                "url": {
+                  "raw": "{{base_url}}/debt-payments/1",
+                  "host": ["{{base_url}}"],
+                  "path": ["debt-payments", "1"]
+                },
+                "description": "Update an existing debt payment"
+              },
+              "response": []
+            },
+            {
+              "name": "Delete Debt Payment",
+              "request": {
+                "method": "DELETE",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/debt-payments/1",
+                  "host": ["{{base_url}}"],
+                  "path": ["debt-payments", "1"]
+                },
+                "description": "Delete a debt payment record"
+              },
+              "response": []
+            },
+            {
+              "name": "Get Debt Payments Summary",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/debt-payments-summary",
+                  "host": ["{{base_url}}"],
+                  "path": ["debt-payments-summary"]
+                },
+                "description": "Get comprehensive debt payments summary"
+              },
+              "response": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Asset Management",
+      "item": [
+        {
+          "name": "List Assets",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/assets",
+              "host": ["{{base_url}}"],
+              "path": ["assets"]
+            },
+            "description": "Get all assets for authenticated user"
+          },
+          "response": []
+        },
+        {
+          "name": "Create Asset",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Primary Residence\",\n  \"type\": \"real_estate\",\n  \"value\": 250000.00,\n  \"acquisition_date\": \"2020-05-15\",\n  \"description\": \"Family home\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/assets",
+              "host": ["{{base_url}}"],
+              "path": ["assets"]
+            },
+            "description": "Create a new asset record"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Asset",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/assets/1",
+              "host": ["{{base_url}}"],
+              "path": ["assets", "1"]
+            },
+            "description": "Get specific asset by ID"
+          },
+          "response": []
+        },
+        {
+          "name": "Update Asset",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"value\": 260000.00,\n  \"description\": \"Updated home value\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/assets/1",
+              "host": ["{{base_url}}"],
+              "path": ["assets", "1"]
+            },
+            "description": "Update an existing asset"
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Asset",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/assets/1",
+              "host": ["{{base_url}}"],
+              "path": ["assets", "1"]
+            },
+            "description": "Delete an asset record"
+          },
+          "response": []
+        }
+      ]
+    }
+  ],
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          "// Set base URL if not set",
+          "if (!pm.collectionVariables.get('base_url')) {",
+          "    pm.collectionVariables.set('base_url', 'http://localhost:8000/api/v1');",
+          "}"
+        ]
+      }
+    }
+  ]
+}
