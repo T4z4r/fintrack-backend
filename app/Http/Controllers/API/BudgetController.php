@@ -15,7 +15,7 @@ class BudgetController extends Controller
     public function index()
     {
         try {
-            $budgets = Auth::user()->budgets;
+            $budgets = Auth::user()->budgets()->with('budgetItems')->get();
 
             return response()->json([
                 'success' => true,
@@ -91,6 +91,7 @@ class BudgetController extends Controller
         try {
             $budget = Budget::where('user_id', Auth::id())
                 ->where('id', $id)
+                ->with('budgetItems')
                 ->first();
 
             if (!$budget) {
@@ -103,7 +104,7 @@ class BudgetController extends Controller
             return response()->json([
                 'success' => true,
                 'message' => 'Budget retrieved successfully',
-                'data' => $budget->loadCalculatedAttributes()
+                'data' => $budget->loadWithItems()
             ], 200);
         } catch (\Exception $e) {
             return response()->json([

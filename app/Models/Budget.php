@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Budget extends Model
 {
     protected $fillable = [
-        'user_id', 
+        'user_id',
         'name',
         'planned_amount',
         'spent_amount',
@@ -22,9 +22,39 @@ class Budget extends Model
         'year'
     ];
 
+    protected $casts = [
+        'planned_amount' => 'decimal:2',
+        'spent_amount' => 'decimal:2',
+        'monthly_limit' => 'decimal:2'
+    ];
+
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    /**
+     * Get all budget items for this budget
+     */
+    public function budgetItems()
+    {
+        return $this->hasMany(BudgetItem::class);
+    }
+
+    /**
+     * Calculate total planned amount from budget items
+     */
+    public function getTotalPlannedAmountAttribute()
+    {
+        return $this->budgetItems()->sum('planned_amount');
+    }
+
+    /**
+     * Calculate total spent amount from budget items
+     */
+    public function getTotalSpentAmountAttribute()
+    {
+        return $this->budgetItems()->sum('spent_amount');
     }
 
     /**
@@ -32,11 +62,12 @@ class Budget extends Model
      */
     public function getUsagePercentageAttribute()
     {
-        if ($this->planned_amount <= 0) {
+        $totalPlanned = $this->total_planned_amount;
+        if ($totalPlanned <= 0) {
             return 0;
         }
-        
-        return min(100, ($this->spent_amount / $this->planned_amount) * 100);
+
+        return min(100, ($this->total_spent_amount / $totalPlanned) * 100);
     }
 
     /**
@@ -44,7 +75,7 @@ class Budget extends Model
      */
     public function getRemainingAmountAttribute()
     {
-        return $this->planned_amount - $this->spent_amount;
+        return $this->total_planned_amount - $this->total_spent_amount;
     }
 
     /**
@@ -52,13 +83,24 @@ class Budget extends Model
      */
     public function getCalculatedStatusAttribute()
     {
-        if ($this->spent_amount >= $this->planned_amount) {
+        $totalSpent = $this->total_spent_amount;
+        $totalPlanned = $this->total_planned_amount;
+
+        if ($totalSpent >= $totalPlanned) {
             return 'exceeded';
-        } elseif ($this->spent_amount >= ($this->planned_amount * 0.8)) {
+        } elseif ($totalSpent >= ($totalPlanned * 0.8)) {
             return 'warning';
         } else {
             return 'on_track';
         }
+    }
+
+    /**
+     * Get budget items grouped by category type
+     */
+    public function getItemsByCategoryTypeAttribute()
+    {
+        return $this->budgetItems->groupBy('category_type');
     }
 
     /**
@@ -67,10 +109,28 @@ class Budget extends Model
     public function loadCalculatedAttributes()
     {
         return array_merge($this->toArray(), [
+            'total_planned_amount' => $this->total_planned_amount,
+            'total_spent_amount' => $this->total_spent_amount,
             'usage_percentage' => $this->usage_percentage,
             'remaining_amount' => $this->remaining_amount,
-            'calculated_status' => $this->calculated_status
+            'calculated_status' => $this->calculated_status,
+            'budget_items_count' => $this->budgetItems()->count()
         ]);
+    }
+
+    /**
+     * Load budget with items and their calculated attributes
+     */
+    public function loadWithItems()
+    {
+        $this->load('budgetItems');
+        $budgetData = $this->loadCalculatedAttributes();
+
+        $budgetData['budget_items'] = $this->budgetItems->map(function ($item) {
+            return $item->loadCalculatedAttributes();
+        });
+
+        return $budgetData;
     }
 
     /**
@@ -95,5 +155,13 @@ class Budget extends Model
     public function scopeByStatus($query, $status)
     {
         return $query->where('status', $status);
+    }
+
+    /**
+     * Scope to get budgets with their items
+     */
+    public function scopeWithItems($query)
+    {
+        return $query->with('budgetItems');
     }
 }

@@ -7,8 +7,10 @@ use App\Http\Controllers\API\IncomeSourceController;
 use App\Http\Controllers\API\IncomeController;
 use App\Http\Controllers\API\ExpenseController;
 use App\Http\Controllers\API\BudgetController;
+use App\Http\Controllers\API\BudgetItemController;
 use App\Http\Controllers\API\InvestmentController;
 use App\Http\Controllers\API\DebtController;
+use App\Http\Controllers\API\DebtPaymentController;
 use App\Http\Controllers\API\AssetController;
 use App\Http\Controllers\API\DashboardController;
 
@@ -68,6 +70,15 @@ Route::middleware('auth:sanctum')->prefix('v1')->group(function () {
         Route::put('/budgets/{id}', [BudgetController::class, 'update']);
         Route::delete('/budgets/{id}', [BudgetController::class, 'destroy']);
 
+        Route::get('/budget-items', [BudgetItemController::class, 'index']);
+        Route::post('/budget-items', [BudgetItemController::class, 'store']);
+        Route::get('/budget-items/{id}', [BudgetItemController::class, 'show']);
+        Route::put('/budget-items/{id}', [BudgetItemController::class, 'update']);
+        Route::delete('/budget-items/{id}', [BudgetItemController::class, 'destroy']);
+        Route::get('/budgets/{budgetId}/items', [BudgetItemController::class, 'itemsForBudget']);
+        Route::patch('/budget-items/{id}/spent-amount', [BudgetItemController::class, 'updateSpentAmount']);
+        Route::get('/budget-items-summary', [BudgetItemController::class, 'summaryByCategory']);
+
         Route::get('/investments', [InvestmentController::class, 'index']);
         Route::post('/investments', [InvestmentController::class, 'store']);
         Route::get('/investments/{id}', [InvestmentController::class, 'show']);
@@ -79,7 +90,15 @@ Route::middleware('auth:sanctum')->prefix('v1')->group(function () {
         Route::get('/debts/{id}', [DebtController::class, 'show']);
         Route::put('/debts/{id}', [DebtController::class, 'update']);
         Route::delete('/debts/{id}', [DebtController::class, 'destroy']);
-        
+
+        Route::get('/debt-payments', [DebtPaymentController::class, 'index']);
+        Route::post('/debt-payments', [DebtPaymentController::class, 'store']);
+        Route::get('/debt-payments/{id}', [DebtPaymentController::class, 'show']);
+        Route::put('/debt-payments/{id}', [DebtPaymentController::class, 'update']);
+        Route::delete('/debt-payments/{id}', [DebtPaymentController::class, 'destroy']);
+        Route::get('/debts/{debtId}/payments', [DebtPaymentController::class, 'paymentsForDebt']);
+        Route::get('/debt-payments-summary', [DebtPaymentController::class, 'summary']);
+
         Route::get('/assets', [AssetController::class, 'index']);
         Route::post('/assets', [AssetController::class, 'store']);
         Route::get('/assets/{id}', [AssetController::class, 'show']);
