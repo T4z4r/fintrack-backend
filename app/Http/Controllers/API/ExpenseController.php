@@ -39,7 +39,7 @@ class ExpenseController extends Controller
         try {
             $data = $request->validate([
                 'category' => 'required|string|max:255',
-                'amount' => 'required|numeric|min:0',
+                'amount' => 'required|min:0',
                 'payment_source' => 'required|string|max:255',
                 'date' => 'required|date',
                 'notes' => 'nullable|string|max:1000'
@@ -119,7 +119,7 @@ class ExpenseController extends Controller
 
             $data = $request->validate([
                 'category' => 'sometimes|required|string|max:255',
-                'amount' => 'sometimes|required|numeric|min:0',
+                'amount' => 'sometimes|required|min:0',
                 'payment_source' => 'sometimes|required|string|max:255',
                 'date' => 'sometimes|required|date',
                 'notes' => 'nullable|string|max:1000'
