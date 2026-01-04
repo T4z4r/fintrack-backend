@@ -46,7 +46,7 @@ class InvestmentSeeder extends Seeder
             'amount_invested' => 3000.00,
             'start_date' => '2023-07-01',
             'expected_return' => 8.00,
-            'status' => 'completed',
+            'status' => 'closed',
         ]);
     }
 }

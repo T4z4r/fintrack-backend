@@ -60,7 +60,7 @@ class BudgetItemSeeder extends Seeder
             'category_type' => 'income',
             'category' => 'Freelance',
             'description' => 'Freelance projects',
-            'status' => 'on_track',
+            'status' => 'active',
         ]);
 
         // Items for Entertainment Budget (budget_id 3)
