@@ -16,28 +16,28 @@ class IncomeSourceSeeder extends Seeder
         IncomeSource::create([
             'user_id' => 1,
             'name' => 'Primary Salary',
-            'type' => 'salary',
+            'type' => 'bank',
             'balance' => 5000.00,
         ]);
 
         IncomeSource::create([
             'user_id' => 1,
             'name' => 'Freelance Work',
-            'type' => 'business',
+            'type' => 'cash',
             'balance' => 2000.00,
         ]);
 
         IncomeSource::create([
             'user_id' => 2,
             'name' => 'Investment Returns',
-            'type' => 'investment',
+            'type' => 'bank',
             'balance' => 10000.00,
         ]);
 
         IncomeSource::create([
             'user_id' => 2,
             'name' => 'Part-time Job',
-            'type' => 'salary',
+            'type' => 'mno',
             'balance' => 1500.00,
         ]);
     }
