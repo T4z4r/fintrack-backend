@@ -23,7 +23,7 @@ class BudgetItemSeeder extends Seeder
             'category_type' => 'expense',
             'category' => 'Food',
             'description' => 'Groceries and dining out',
-            'status' => 'on_track',
+            'status' => 'active',
         ]);
 
         BudgetItem::create([
@@ -35,7 +35,7 @@ class BudgetItemSeeder extends Seeder
             'category_type' => 'expense',
             'category' => 'Transport',
             'description' => 'Bus and taxi fares',
-            'status' => 'on_track',
+            'status' => 'active',
         ]);
 
         // Items for Annual Income Budget (budget_id 2)
@@ -48,7 +48,7 @@ class BudgetItemSeeder extends Seeder
             'category_type' => 'income',
             'category' => 'Salary',
             'description' => 'Primary salary income',
-            'status' => 'on_track',
+            'status' => 'active',
         ]);
 
         BudgetItem::create([
@@ -73,7 +73,7 @@ class BudgetItemSeeder extends Seeder
             'category_type' => 'expense',
             'category' => 'Entertainment',
             'description' => 'Movie tickets and streaming',
-            'status' => 'on_track',
+            'status' => 'active',
         ]);
 
         // Items for Investment Budget (budget_id 4)
@@ -86,7 +86,7 @@ class BudgetItemSeeder extends Seeder
             'category_type' => 'investment',
             'category' => 'Stocks',
             'description' => 'Stock investments',
-            'status' => 'on_track',
+            'status' => 'active',
         ]);
 
         BudgetItem::create([
@@ -98,7 +98,7 @@ class BudgetItemSeeder extends Seeder
             'category_type' => 'investment',
             'category' => 'Crypto',
             'description' => 'Cryptocurrency investments',
-            'status' => 'on_track',
+            'status' => 'active',
         ]);
 
         BudgetItem::create([
@@ -110,7 +110,7 @@ class BudgetItemSeeder extends Seeder
             'category_type' => 'investment',
             'category' => 'Bonds',
             'description' => 'Bond investments',
-            'status' => 'on_track',
+            'status' => 'active',
         ]);
     }
 }
